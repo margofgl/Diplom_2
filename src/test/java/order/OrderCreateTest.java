@@ -56,9 +56,9 @@ public class OrderCreateTest {
                 .when()
                 .post(baseUrl + "/orders")
                 .then()
-                .statusCode(200)
-                .body("success", equalTo(true))
-                .body("order.number", greaterThan(0));
+                .statusCode(200)           // API реально возвращает 200
+                .body("success", equalTo(true))  // success = false — это признак ошибки для API
+                .body("order.number", greaterThan(0)); // желательно проверить, что есть сообщение об ошибке
     }
 
     @Test
@@ -84,9 +84,10 @@ public class OrderCreateTest {
                 .when()
                 .post(baseUrl + "/orders")
                 .then()
-                .statusCode(400);
+                .statusCode(400); // API не возвращает 500, а 400 на неверные ингредиенты
     }
 
+    // ===== ШАГИ =====
     @Step("Получаем список ингредиентов")
     private List<String> getIngredients() {
         return given()

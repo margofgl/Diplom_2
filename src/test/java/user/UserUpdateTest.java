@@ -62,6 +62,8 @@ public class UserUpdateTest {
                 .body("message", equalTo("You should be authorised"));
     }
 
+    // ===== Вспомогательные шаги =====
+
     @Step("Создаём пользователя {email}")
     private ValidatableResponse createUser(String email) {
         return given()
