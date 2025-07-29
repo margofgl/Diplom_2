@@ -19,12 +19,12 @@ public class UserCreateTest {
     private static final String DEFAULT_NAME = "MargoUser";
 
     private String userEmail;
-    private String accessToken; // для удаления пользователя
+    private String accessToken;
 
     @Before
     public void setUp() {
         RestAssured.baseURI = BASE_URL;
-        userEmail = "margo" + UUID.randomUUID() + "@test.com"; // уникальный email перед каждым тестом
+        userEmail = "margo" + UUID.randomUUID() + "@test.com";
     }
 
     @After
@@ -42,20 +42,14 @@ public class UserCreateTest {
                 .body("user.email", equalTo(userEmail))
                 .body("user.name", equalTo(DEFAULT_NAME));
 
-        // сохраняем токен для удаления пользователя
         accessToken = extractToken(response);
     }
 
     @Test
     public void createExistingUser_shouldReturn403() {
-        // первый запрос — успешная регистрация
         ValidatableResponse firstResponse = createUser(userEmail);
         firstResponse.statusCode(200);
-
-        // сохраняем токен, чтобы удалить после теста
         accessToken = extractToken(firstResponse);
-
-        // второй запрос — такой пользователь уже есть
         createUser(userEmail)
                 .statusCode(403)
                 .body("success", equalTo(false))
@@ -64,7 +58,6 @@ public class UserCreateTest {
 
     @Test
     public void createUserMissingFields_shouldReturn403() {
-        // пример — отсутствует email
         given()
                 .contentType("application/json")
                 .body("{\"password\":\"" + DEFAULT_PASSWORD + "\",\"name\":\"" + DEFAULT_NAME + "\"}")
@@ -75,8 +68,6 @@ public class UserCreateTest {
                 .body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
     }
-
-    // ================= Вспомогательные методы =================
 
     @Step("Создаём пользователя с email: {email}")
     private ValidatableResponse createUser(String email) {

@@ -25,9 +25,7 @@ public class UserLoginTest {
     public void setUp() {
         RestAssured.baseURI = BASE_URL;
         userEmail = "margo" + UUID.randomUUID() + "@test.com";
-        // создаем пользователя для тестов
         createUser(userEmail).statusCode(200);
-        // логинимся и сохраняем токен, чтобы потом удалить пользователя
         accessToken = login(userEmail, DEFAULT_PASSWORD).extract().path("accessToken");
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring(7);

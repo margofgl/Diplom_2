@@ -29,8 +29,6 @@ public class OrderGetTest {
         createUser(userEmail).statusCode(200);
         accessToken = extractToken(login(userEmail));
         List<String> validIngredients = getIngredients();
-
-        // Создаём заказ, чтобы потом получить его в списке заказов
         createOrder(accessToken, validIngredients).statusCode(200);
     }
 
@@ -60,8 +58,6 @@ public class OrderGetTest {
                 .body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
     }
-
-    // ===== ШАГИ =====
 
     @Step("Получаем ингредиенты")
     private List<String> getIngredients() {
